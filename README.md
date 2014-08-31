@@ -13,12 +13,12 @@ Edit `_config.yml`:
 
 ## SAMPLE
 
-Write the latex code:
+Write the following latex code:
 
     $$
     \frac{\partial u}{\partial t} = h^2 \left( \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} + \frac{\partial^2 u}{\partial z^2}\right)
     $$
 
-And you will see:
+Then you will get:
 
-![sample](img_url)
+![sample](https://raw.githubusercontent.com/phoenixcw/hexo-renderer-mathjax/master/sample.png)

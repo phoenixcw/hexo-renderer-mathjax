@@ -1,0 +1,2 @@
+hexo-renderer-mathjax
+=====================

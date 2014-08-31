@@ -1,0 +1,31 @@
+{
+  "name": "hexo-renderer-mathjax",
+  "version": "0.2.0",
+  "description": "MathJax renderer plugin for Hexo",
+  "main": "index.js",
+  "dependencies": {
+    "ejs": "^1.0.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phoenixcw/hexo-renderer-mathjax.git"
+  },
+  "keywords": [
+    "math",
+    "mathjax",
+    "renderer",
+    "hexo"
+  ],
+  "author": {
+    "name": "phoenixcw",
+    "email": "ariosxcw@hotmail.com",
+    "url": "http://blog.phoenixcw.com"
+  },
+  "readme": "https://github.com/phoenixcw/hexo-renderer-mathjax/blob/master/README.md",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phoenixcw/hexo-renderer-mathjax/issues"
+  },
+  "homepage": "https://github.com/phoenixcw/hexo-renderer-mathjax"
+}

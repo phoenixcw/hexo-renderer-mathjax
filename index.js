@@ -1,10 +1,10 @@
 var path = require('path');
 var ejs = require('ejs');
-var file = hexo.file;
+var fs = require('hexo-fs');
 
 var layout = 'layout.ejs';
 var bodyTag = '</body>';
-var mathjaxScript = file.readFileSync(path.join(__dirname, 'mathjax.html'));
+var mathjaxScript = fs.readFileSync(path.join(__dirname, 'mathjax.html'));
 
 hexo.extend.renderer.register('ejs', 'html', function(data, options, callback) {
     var path = options.filename = data.path;

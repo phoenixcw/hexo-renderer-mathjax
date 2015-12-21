@@ -1,5 +1,7 @@
 var path = require('path');
 var ejs = require('ejs');
+var Hexo = require('hexo');
+var hexo = new Hexo(process.cwd(), {});
 var fs = require('hexo-fs');
 
 var layout = 'layout.ejs';

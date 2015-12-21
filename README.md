@@ -1,5 +1,7 @@
 # MathJax Renderer Plugin for Hexo
 
+[![npm version][npm-badge]][npm-url]
+
 Add support of [MathJax](http://www.mathjax.org/) for [Hexo](http://hexo.io/).
 
 ## INSTALL
@@ -11,7 +13,7 @@ Edit `_config.yml`:
     plugins:
     - hexo-renderer-mathjax
 
-## SAMPLE
+## Sample
 
 Write the following latex code:
 
@@ -22,3 +24,6 @@ Write the following latex code:
 Then you will get:
 
 ![sample](https://raw.githubusercontent.com/phoenixcw/hexo-renderer-mathjax/master/sample.png)
+
+[npm-badge]: https://badge.fury.io/js/hexo-renderer-mathjax.svg
+[npm-url]: https://badge.fury.io/js/hexo-renderer-mathjax

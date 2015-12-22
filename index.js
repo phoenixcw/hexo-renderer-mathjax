@@ -1,17 +1,1 @@
-var path = require('path');
-var ejs = require('ejs');
-var Hexo = require('hexo');
-var hexo = new Hexo(process.cwd(), {});
-var fs = require('hexo-fs');
-
-var layout = 'layout.ejs';
-var bodyTag = '</body>';
-var mathjaxScript = fs.readFileSync(path.join(__dirname, 'mathjax.html'));
-
-hexo.extend.renderer.register('ejs', 'html', function(data, options) {
-    var path = options.filename = data.path;
-    var content = data.text;
-    if (layout === path.substring(path.length - layout.length))
-        content = content.replace(bodyTag, mathjaxScript + '\n' + bodyTag);
-    ejs.render(content, options);
-});
+require('./lib/hexo-renderer-mathjax');

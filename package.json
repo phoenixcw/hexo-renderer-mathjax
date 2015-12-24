@@ -4,16 +4,19 @@
   "description": "MathJax renderer plugin for Hexo",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "istanbul cover _mocha; cat coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "ejs": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^3.4.1",
+    "coveralls": "^2.11.6",
     "ejs": "^1.0.0",
     "hexo": "^3.1.1",
     "hexo-fs": "^0.1.5",
+    "istanbul": "^0.4.1",
     "mocha": "^2.3.4"
   },
   "repository": {

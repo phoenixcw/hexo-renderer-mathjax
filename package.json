@@ -1,12 +1,24 @@
 {
   "name": "hexo-renderer-mathjax",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "MathJax renderer plugin for Hexo",
   "main": "index.js",
-  "dependencies": {
-    "ejs": "^1.0.0"
+  "scripts": {
+    "test": "mocha",
+    "coverage": "istanbul cover _mocha; cat coverage/lcov.info | coveralls"
   },
-  "devDependencies": {},
+  "dependencies": {
+    "ejs": "^2.3.4"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "coveralls": "^2.11.6",
+    "ejs": "^2.3.4",
+    "hexo": "^3.1.1",
+    "hexo-fs": "^0.1.5",
+    "istanbul": "^0.4.1",
+    "mocha": "^2.3.4"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/phoenixcw/hexo-renderer-mathjax.git"

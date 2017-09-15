@@ -1,6 +1,6 @@
 {
-  "name": "hexo-renderer-mathjax",
-  "version": "0.6.0",
+  "name": "hexo-renderer-mathjax2",
+  "version": "0.6.1",
   "description": "MathJax renderer plugin for Hexo",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/phoenixcw/hexo-renderer-mathjax.git"
+    "url": "https://github.com/Mybrc91/hexo-renderer-mathjax.git"
   },
   "keywords": [
     "math",
@@ -30,14 +30,13 @@
     "hexo"
   ],
   "author": {
-    "name": "phoenixcw",
-    "email": "ariosxcw@hotmail.com",
-    "url": "http://blog.phoenixcw.com"
+    "name": "Mybrc91",
+    "email": "Mybrc91@gmail.com"
   },
-  "readme": "https://github.com/phoenixcw/hexo-renderer-mathjax/blob/master/README.md",
+  "readme": "https://github.com/Mybrc91/hexo-renderer-mathjax/blob/master/README.md",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/phoenixcw/hexo-renderer-mathjax/issues"
+    "url": "https://github.com/Mybrc91/hexo-renderer-mathjax/issues"
   },
-  "homepage": "https://github.com/phoenixcw/hexo-renderer-mathjax"
+  "homepage": "https://github.com/Mybrc91/hexo-renderer-mathjax"
 }

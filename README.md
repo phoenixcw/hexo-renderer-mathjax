@@ -1,9 +1,6 @@
 # MathJax Renderer Plugin for Hexo
 
-[![npm version][npm-badge]][npm-url]
-[![Build Status][travis-badge]][travis-url]
-[![Coverage Status][coveralls-badge]][coveralls-url]
-[![Dependency Status][david-badge]][david-url]
+Clone from [phoenixcw](https://github.com/phoenixcw/hexo-renderer-mathjax) and update.
 
 Add support of [MathJax](http://www.mathjax.org/) for [Hexo](http://hexo.io/).
 
@@ -16,7 +13,7 @@ Add support of [MathJax](http://www.mathjax.org/) for [Hexo](http://hexo.io/).
 If you want to customize the mathjax js src, Edit `_config.yml`:
 
     mathjax:
-      cnd: your-mathjax-cdn-src
+      cdn: your-mathjax-cdn-src
 
 ## Sample
 

@@ -8,14 +8,13 @@
     "coverage": "istanbul cover _mocha; cat coverage/lcov.info | coveralls"
   },
   "dependencies": {
-    "ejs": "^2.3.4",
+    "ejs": "^3.1.10",
     "hexo-fs": "^0.1.5"
   },
   "devDependencies": {
     "chai": "^3.4.1",
     "coveralls": "^2.11.6",
-    "ejs": "^2.3.4",
-    "hexo": "^3.1.1",
+    "hexo": "^7.2.0",
     "hexo-fs": "^0.1.5",
     "istanbul": "^0.4.1",
     "mocha": "^2.3.4"

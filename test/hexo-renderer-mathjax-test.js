@@ -28,9 +28,22 @@ describe('hexo-renderer-mathjax', function() {
       assert.deepEqual(hexo.extend.injector.get('body_end'), [MATHJAX_HTML]);
     });
 
-    it('registers the MathJax CDN script tag', function() {
+    it('loads MathJax from a pinned version over https', function() {
       const text = hexo.extend.injector.getText('body_end');
-      assert.match(text, /<script src="https:\/\/[^"]+MathJax\.js/);
+      assert.match(text, /src="https:\/\/\S+\/mathjax\/\d+\.\d+\.\d+\/MathJax\.js/);
+    });
+
+    it('loads the script without blocking page rendering', function() {
+      assert.match(hexo.extend.injector.getText('body_end'), /<script\s+async\b/);
+    });
+
+    // The integrity hash is tied to the version in the src above; bumping one
+    // without the other stops MathJax from loading at all.
+    it('pins the CDN payload with subresource integrity', function() {
+      const text = hexo.extend.injector.getText('body_end');
+      assert.match(text, /integrity="sha512-[^"]+"/);
+      // SRI is only enforced on a cross-origin script when the request uses CORS.
+      assert.match(text, /crossorigin="anonymous"/);
     });
 
     it('does not register anything at the other entries', function() {

@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  # GitHub disables scheduled runs after 60 days without repository activity,
+  # so keep a way to trigger the audit by hand.
+  workflow_dispatch:
   schedule:
     # Catch advisories filed against dependencies of an otherwise idle repo.
     - cron: '0 6 * * 1'

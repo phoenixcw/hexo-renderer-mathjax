@@ -35,17 +35,11 @@ Then you will get:
 
 ## Upgrading from 0.6.0
 
-Version 0.6.0 replaced Hexo's `ejs` renderer in order to splice the MathJax
-script into the layout. That renderer discarded its own output, which left EJS
-themes rendering blank pages. It is gone now, and the script is injected after
-rendering instead.
-
-If your site somehow relied on this plugin to render `.ejs` templates, install
-the real renderer:
+0.6.0 registered its own `ejs` renderer; this version injects the script after
+rendering instead. If your site does not already depend on `hexo-renderer-ejs` —
+`hexo init` and every EJS theme pull it in — add it:
 
     $ npm install hexo-renderer-ejs --save
-
-Sites created with `hexo init`, and every EJS theme, already depend on it.
 
 [npm-badge]: https://img.shields.io/npm/v/hexo-renderer-mathjax.svg
 [npm-url]: https://www.npmjs.com/package/hexo-renderer-mathjax

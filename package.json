@@ -3,25 +3,29 @@
   "version": "0.6.0",
   "description": "MathJax renderer plugin for Hexo",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha",
-    "coverage": "istanbul cover _mocha; cat coverage/lcov.info | coveralls"
+  "files": [
+    "index.js",
+    "lib/"
+  ],
+  "engines": {
+    "node": ">=20"
   },
-  "dependencies": {
-    "ejs": "^3.1.10",
-    "hexo-fs": "^0.1.5"
+  "scripts": {
+    "lint": "eslint .",
+    "test": "node --test",
+    "coverage": "c8 --reporter=text --reporter=lcov node --test"
   },
   "devDependencies": {
-    "chai": "^3.4.1",
-    "coveralls": "^2.11.6",
+    "@eslint/js": "^10.0.1",
+    "c8": "^12.0.0",
+    "eslint": "^10.8.1",
+    "globals": "^17.11.0",
     "hexo": "^7.2.0",
-    "hexo-fs": "^0.1.5",
-    "istanbul": "^0.4.1",
-    "mocha": "^2.3.4"
+    "hexo-renderer-ejs": "^2.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/phoenixcw/hexo-renderer-mathjax.git"
+    "url": "git+https://github.com/phoenixcw/hexo-renderer-mathjax.git"
   },
   "keywords": [
     "math",
@@ -31,10 +35,8 @@
   ],
   "author": {
     "name": "phoenixcw",
-    "email": "ariosxcw@hotmail.com",
-    "url": "http://blog.phoenixcw.com"
+    "url": "https://github.com/phoenixcw"
   },
-  "readme": "https://github.com/phoenixcw/hexo-renderer-mathjax/blob/master/README.md",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/phoenixcw/hexo-renderer-mathjax/issues"

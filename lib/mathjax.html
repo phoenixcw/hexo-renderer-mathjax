@@ -4,6 +4,11 @@
             inlineMath: [ ["$","$"], ["\\(","\\)"] ],
             skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
             processEscapes: true
+        },
+        // The combined TeX-AMS-MML_HTMLorMML config ships AMSmath and AMSsymbols
+        // but not TeX/color.js, which leaves \color and \colorbox undefined.
+        TeX: {
+            extensions: ["color.js"]
         }
     });
     MathJax.Hub.Queue(function() {

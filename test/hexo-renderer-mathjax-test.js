@@ -46,6 +46,13 @@ describe('hexo-renderer-mathjax', function() {
       assert.match(text, /crossorigin="anonymous"/);
     });
 
+    // TeX-AMS-MML_HTMLorMML does not pull in TeX/color.js, so \colorbox stays
+    // an undefined macro unless the snippet asks for the extension.
+    it('requests the TeX color extension', function() {
+      const text = hexo.extend.injector.getText('body_end');
+      assert.match(text, /TeX:\s*{\s*extensions:\s*\["color\.js"\]/);
+    });
+
     it('does not register anything at the other entries', function() {
       for (const entry of ['head_begin', 'head_end', 'body_begin']) {
         assert.deepEqual(hexo.extend.injector.get(entry), [], entry);

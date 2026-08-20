@@ -20,8 +20,8 @@ injector, so it works with any theme and any template engine.
 
     $ npm install hexo-renderer-mathjax --save
 
-That is all — Hexo loads plugins from `package.json` automatically. No
-`_config.yml` change is needed.
+That is all — Hexo loads plugins from `package.json` automatically, and the
+defaults need no `_config.yml` change.
 
 ## Sample
 
@@ -34,6 +34,39 @@ Write the following latex code:
 Then you will get:
 
 ![sample](https://raw.githubusercontent.com/phoenixcw/hexo-renderer-mathjax/main/sample.png)
+
+## CONFIGURATION
+
+By default MathJax 2.7.9 is loaded from cdnjs with a pinned subresource
+integrity hash. If that CDN is slow or blocked for your readers, point the
+plugin at another one from your site's `_config.yml`:
+
+```yaml
+mathjax:
+  src: https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+```
+
+| Option      | Default                     | Description                                        |
+| ----------- | --------------------------- | -------------------------------------------------- |
+| `src`       | the cdnjs MathJax 2.7.9 URL | URL of `MathJax.js`, including its `?config=` query |
+| `integrity` | the hash for that URL       | Subresource integrity hash for `src`               |
+
+Notes:
+
+- Keep the `?config=TeX-AMS-MML_HTMLorMML` query (or another combined config
+  that includes the TeX input and an HTML output) — the injected snippet
+  configures MathJax 2.x through `MathJax.Hub.Config`.
+- The bundled `integrity` hash only matches the cdnjs payload, so setting your
+  own `src` drops it. Add `integrity` yourself to keep the script pinned:
+
+  ```yaml
+  mathjax:
+    src: https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+    integrity: sha384-...
+  ```
+
+- To serve MathJax from your own site instead, put the files under `source/`
+  and set `src` to the resulting path.
 
 [npm-badge]: https://img.shields.io/npm/v/hexo-renderer-mathjax.svg
 [npm-url]: https://www.npmjs.com/package/hexo-renderer-mathjax

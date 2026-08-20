@@ -6,9 +6,16 @@ const fs = require('node:fs');
 const path = require('node:path');
 const Hexo = require('hexo');
 
-const MATHJAX_HTML = fs.readFileSync(
+const MODULE_PATH = require.resolve('../lib/hexo-renderer-mathjax.js');
+
+// The file now holds the MathJax.Hub.Config block only; the <script src> tag is
+// built at load time from the site config.
+const MATHJAX_CONFIG = fs.readFileSync(
     path.join(__dirname, '..', 'lib', 'mathjax.html'), 'utf8'
 ).trim();
+
+const DEFAULT_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+const CUSTOM_SRC = 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
 
 global.hexo = new Hexo(__dirname, {silent: true});
 
@@ -17,6 +24,25 @@ global.hexo = new Hexo(__dirname, {silent: true});
 require('hexo-renderer-ejs');
 require('../index.js');
 
+// Load the plugin again against a throwaway site so one test can set
+// `mathjax:` in _config.yml without disturbing the default-config instance.
+function snippetWith(mathjax) {
+  const scoped = new Hexo(__dirname, {silent: true});
+  if (arguments.length > 0) scoped.config.mathjax = mathjax;
+
+  const realHexo = global.hexo;
+  delete require.cache[MODULE_PATH];
+  global.hexo = scoped;
+
+  try {
+    require(MODULE_PATH);
+    return scoped.extend.injector.getText('body_end');
+  } finally {
+    global.hexo = realHexo;
+    delete require.cache[MODULE_PATH];
+  }
+}
+
 const LAYOUT = '<html><head></head><body><h1><%= title %></h1></body></html>';
 const LOCALS = {title: 'hello'};
 
@@ -24,8 +50,10 @@ describe('hexo-renderer-mathjax', function() {
 
   describe('injector registration', function() {
 
-    it('registers the MathJax snippet at body_end', function() {
-      assert.deepEqual(hexo.extend.injector.get('body_end'), [MATHJAX_HTML]);
+    it('registers a single MathJax snippet at body_end', function() {
+      const registered = hexo.extend.injector.get('body_end');
+      assert.equal(registered.length, 1);
+      assert.ok(registered[0].startsWith(MATHJAX_CONFIG));
     });
 
     it('loads MathJax from a pinned version over https', function() {
@@ -57,6 +85,63 @@ describe('hexo-renderer-mathjax', function() {
       for (const entry of ['head_begin', 'head_end', 'body_begin']) {
         assert.deepEqual(hexo.extend.injector.get(entry), [], entry);
       }
+    });
+
+  });
+
+  // A site behind the Great Firewall cannot reach cdnjs reliably, so the CDN
+  // has to be swappable from _config.yml instead of by editing node_modules.
+  describe('cdn configuration', function() {
+
+    it('uses the bundled cdnjs url and hash when nothing is configured', function() {
+      const text = snippetWith();
+      assert.ok(text.includes(`src="${DEFAULT_SRC}"`));
+      assert.match(text, /integrity="sha512-/);
+    });
+
+    it('loads MathJax from a configured src', function() {
+      const text = snippetWith({src: CUSTOM_SRC});
+      assert.ok(text.includes(`src="${CUSTOM_SRC}"`));
+      assert.ok(!text.includes(DEFAULT_SRC));
+    });
+
+    // Our hash describes the cdnjs payload only. Emitting it next to somebody
+    // else's url would make the browser reject the script instead of running it.
+    it('drops the bundled hash when the src is overridden', function() {
+      const text = snippetWith({src: CUSTOM_SRC});
+      assert.ok(!text.includes('integrity='), 'kept an integrity hash for a foreign url');
+      assert.ok(!text.includes('crossorigin='), 'kept crossorigin without a hash to enforce');
+    });
+
+    it('pins a custom src when the site supplies its own hash', function() {
+      const text = snippetWith({src: CUSTOM_SRC, integrity: 'sha384-abc123'});
+      assert.ok(text.includes('integrity="sha384-abc123"'));
+      assert.ok(text.includes('crossorigin="anonymous"'));
+    });
+
+    it('lets an explicit empty integrity opt out of SRI on the default cdn', function() {
+      const text = snippetWith({integrity: null});
+      assert.ok(text.includes(`src="${DEFAULT_SRC}"`));
+      assert.ok(!text.includes('integrity='));
+    });
+
+    it('escapes the configured src instead of breaking out of the attribute', function() {
+      const text = snippetWith({src: 'https://example.com/MathJax.js?a=1&b=2"onload="alert(1)'});
+      assert.ok(text.includes('src="https://example.com/MathJax.js?a=1&amp;b=2&quot;onload=&quot;alert(1)"'));
+      assert.ok(!text.includes('onload="alert'));
+    });
+
+    it('falls back to the defaults when mathjax is not a config object', function() {
+      for (const value of [true, 'jsdelivr', null]) {
+        const text = snippetWith(value);
+        assert.ok(text.includes(`src="${DEFAULT_SRC}"`), `mathjax: ${value}`);
+      }
+    });
+
+    it('still injects the tex config alongside a custom src', function() {
+      const text = snippetWith({src: CUSTOM_SRC});
+      assert.ok(text.startsWith(MATHJAX_CONFIG));
+      assert.match(text, /TeX:\s*{\s*extensions:\s*\["color\.js"\]/);
     });
 
   });
@@ -122,19 +207,18 @@ describe('hexo-renderer-mathjax', function() {
   describe('hexo version guard', function() {
 
     it('fails with a readable message when the injector is missing', function() {
-      const modulePath = require.resolve('../lib/hexo-renderer-mathjax.js');
       const realHexo = global.hexo;
-      delete require.cache[modulePath];
+      delete require.cache[MODULE_PATH];
       global.hexo = {extend: {}};
 
       try {
         assert.throws(
-          () => require(modulePath),
+          () => require(MODULE_PATH),
           /hexo-renderer-mathjax requires Hexo 5\.0\.0 or above/
         );
       } finally {
         global.hexo = realHexo;
-        delete require.cache[modulePath];
+        delete require.cache[MODULE_PATH];
       }
     });
 

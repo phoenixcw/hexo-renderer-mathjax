@@ -1,0 +1,97 @@
+name: Release
+
+# Releasing is gated on the version in package.json, not on the push itself:
+# a merge that only touches the README leaves the version alone and this
+# workflow no-ops. To cut a release, land a commit that bumps the version
+# (`npm version minor` on your branch, or a standalone bump commit) — merging
+# it publishes to npm, tags the commit and opens the GitHub release.
+#
+# `push` rather than `pull_request: closed` so squash and rebase merges are
+# covered too, and so the workflow file always comes from main — this job holds
+# publish rights, so it must not be defined by the branch it is releasing.
+on:
+  push:
+    branches: [main]
+  # Re-run by hand if a publish failed after the version commit already landed.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: check for a new version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      release: ${{ steps.version.outputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Tags are the record of what has already been released.
+          fetch-depth: 0
+      - id: version
+        run: |
+          version=$(node -p 'require("./package.json").version')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$version" >/dev/null; then
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            echo "v$version is already tagged — nothing to release." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "release=true" >> "$GITHUB_OUTPUT"
+            echo "Releasing v$version." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  release:
+    name: publish v${{ needs.check.outputs.version }}
+    needs: check
+    if: needs.check.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      # Push the tag and create the release.
+      contents: write
+      # Mint the OIDC token npm trades for publish rights.
+      id-token: write
+    env:
+      VERSION: ${{ needs.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      # ci.yml covers this push already, but a green suite is a precondition for
+      # publishing, not a parallel opinion about it.
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+
+      # Trusted publishing needs npm >= 11.5.1; the bundled npm is close enough
+      # to that line that pinning it here is cheaper than tracking Node images.
+      - run: npm install -g npm@latest
+      # No token: npm exchanges the Actions OIDC token for publish rights and
+      # attaches a provenance attestation on its own.
+      - run: npm publish
+
+      - name: Tag the release commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git tag -a "v$VERSION" -m "v$VERSION"
+          git push origin "v$VERSION"
+
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "v$VERSION" \
+            --title "v$VERSION" \
+            --verify-tag \
+            --generate-notes

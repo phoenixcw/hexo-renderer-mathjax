@@ -1,6 +1,6 @@
 {
   "name": "hexo-renderer-mathjax",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "MathJax renderer plugin for Hexo",
   "main": "index.js",
   "files": [

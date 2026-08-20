@@ -13,6 +13,8 @@ injector, so it works with any theme and any template engine.
 
 - Hexo 5.0.0 or above
 - Node.js 20 or above
+- A renderer for your theme's templates, e.g. `hexo-renderer-ejs` for EJS
+  themes — `hexo init` and every EJS theme already pull it in
 
 ## INSTALL
 
@@ -32,14 +34,6 @@ Write the following latex code:
 Then you will get:
 
 ![sample](https://raw.githubusercontent.com/phoenixcw/hexo-renderer-mathjax/main/sample.png)
-
-## Upgrading from 0.6.0
-
-0.6.0 registered its own `ejs` renderer; this version injects the script after
-rendering instead. If your site does not already depend on `hexo-renderer-ejs` —
-`hexo init` and every EJS theme pull it in — add it:
-
-    $ npm install hexo-renderer-ejs --save
 
 [npm-badge]: https://img.shields.io/npm/v/hexo-renderer-mathjax.svg
 [npm-url]: https://www.npmjs.com/package/hexo-renderer-mathjax
